@@ -1,0 +1,16 @@
+{
+  "name": "j_ee_students_system",
+  "version": "1.0.0",
+  "main": "path/to/main.css",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  "dependencies": {
+    "angularjs": "1.5.5",
+    "bootstrap": "3.3.6",
+    "jQuery": "2.2.4",
+    "jquery-ui": "1.11.4"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,94 @@
+<section class="col-lg-6">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title" style="text-align: center;">Създаване на дисциплина</h3></div>
+        <div class="panel-body">
+            <form name="V_F_adminAddDisciplineForm" method="POST" action="" id="V_F_adminAddDisciplineForm">    
+
+                <div class="alert alert-danger" id="V_F_ERRORS_BOX_adminAddDisciplineForm" style="display: none;">
+                    <span class="glyphicon glyphicon-warning-sign" style="font-size: 18px;"></span> Моля поправете следните грешки:<br/>
+
+                </div>
+                <div style="">       
+
+                    <fieldset>                                        
+                        <legend>Информация за създаване на дисциплина</legend>
+                        <div class="form-group"> 
+                            <label for="disciplineName">Наименование на дисциплина:</label>
+                            <input type="text" name="disciplineName" id="disciplineName" class="form-control" required="required" />
+
+                            <br><br>
+
+                            <label for="specialities">Изберете специалност за тази дисциплина:</label>
+                            <select  class="form-control" name="disciplineSpeciality" id="specialities">
+
+                            </select>
+                        </div>    
+
+                    </fieldset>
+                </div>
+
+                <button class="btn btn-primary"  style="display: block; width: 150px; margin: 0 auto;">Запис</button>
+
+                <div style="margin: 10px; text-align: center;">
+
+                </div>
+
+            </form>
+        </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: 'services/specialities/get_specialities',
+            type: 'GET',
+            contentType: "application/json;charset=UTF-8",
+            success: function (data) {
+                for (var i = 0; i !== data.length; ++i) {
+                    $("#specialities").append('<option value="' + data[i].id + '">' + data[i].specialityName + '</option>')
+                }
+                $('#specialities').select({
+                    nonSelectedText: 'Избор на специалност'
+                });
+            }
+        });
+        
+          $("#V_F_adminAddDisciplineForm").submit(function (event) {
+                            event.preventDefault();
+                            $.ajax({
+                                url: 'services/admin/disciplines/create_discipline',
+                                type: 'POST',
+                                data: $("#V_F_adminAddDisciplineForm").serializeArray(),
+                                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                                statusCode: {
+                                    200: function (data) {
+                                        $("#V_F_adminAddDisciplineForm")[0].reset();
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").attr("class", "alert alert-success");
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").html(succesUIComponentIcon + 'Дисциплината е успешно създадена!');
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    },
+                                    400: function (data) {
+                                        systemUser = null;
+                                        var responseJSON = data.responseJSON;
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").attr("class", "alert alert-danger");
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").html(buildListFromErrors(responseJSON.validationErrors));
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    },
+                                    401: function () {
+                                        isUserAuthenticatedViews(mainSectionTemplate, callbackName);
+                                    },
+                                    500: function () {
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").attr("class", "alert alert-danger");
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").html("Грешка на сървъра. Свържете се с екипа по поддръжка.");
+                                        $("#V_F_ERRORS_BOX_adminAddDisciplineForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    }
+                                }
+                            });
+                        });
+
+    });
+</script>
+

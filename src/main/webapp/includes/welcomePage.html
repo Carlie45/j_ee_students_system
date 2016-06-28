@@ -1,0 +1,76 @@
+<section class="col-lg-8 rounded_box" style="text-align: justify; text-indent: 0;">
+    <h2>Добре дошли,</h2>
+    <div class="lead" style="text-align: justify; text-indent: 20;">
+        Моля изберете специалност и дисциплина, за да видите наличните домашни:
+        <div id="specialitiesList" style="text-align: justify;"></div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.ajax({
+            url: 'services/specialities/get_specialities_and_disciplines_in_them',
+            type: 'GET',
+            contentType: "application/json;charset=UTF-8",
+            statusCode: {
+                200: function (data) {
+                    $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                    var specialitiesList = '<ul  class="list-group">';
+                    for (var i = 0; i !== data.length; ++i) {
+                        specialitiesList += '<li  class="list-group-item"><h2><a class="specialityLink" href="#specialityList' + data[i].id + '">' + data[i].specialityName + '</a></h2>';
+                        var disciplinesList = '<ul id="specialityList' + data[i].id + '" class="list-group" style="display:none;">';
+                        for (var j = 0; j !== data[i].disciplines.length; ++j) {
+                            disciplinesList += ('<li id="disciplineId' +
+                                    data[i].disciplines[j].id +
+                                    '" class="list-group-item"> <a class="disciplineLink" href="'
+                                    + data[i].disciplines[j].id + '">' +
+                                    data[i].disciplines[j].disciplineName +
+                                    '</a></li>');
+                        }
+                        if (data[i].disciplines.length === 0) {
+                            disciplinesList += '<li class="list-group-item"><h5>Все още няма добавени дисциплини към тази специалност.</h5></li>';
+                        }
+                        disciplinesList += '</ul>';
+                        specialitiesList += (disciplinesList + '</li>');
+                    }
+                    if (data.length === 0) {
+                        specialitiesList += '<li class="list-group-item"><h5>Все още няма добавени специалности.</h5></li>';
+                    }
+                    specialitiesList += '</ul>';
+
+                    $("#specialitiesList").append(specialitiesList);
+                    $('.specialityLink').on('click', function (event) {
+                        event.preventDefault();
+                        $($(this).attr('href')).show("slow");
+                    });
+
+                    $('.disciplineLink').on('click', function (event) {
+                        event.preventDefault();                       
+                        loadAssignmentsByDisciplinePage($(this).attr('href'));
+                        return false;
+                    });
+
+                },
+                400: function (data) {
+                    systemUser = null;
+                    var responseJSON = data.responseJSON;
+
+                    $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                },
+                401: function () {
+                    isUserAuthenticatedViews(mainSectionTemplate, callbackName);
+                },
+                403: function () {
+                    notAuthorizedAction();
+                },
+                500: function () {
+
+                    $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                }
+            }
+        });
+    });
+
+</script>
+

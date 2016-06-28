@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <Resource id="MySQL_j_ee_students_system" type="javax.sql.DataSource">#Sat May 21 21:32:11 EEST 2016
+jdbcDriver=com.mysql.jdbc.Driver
+password=159357
+userName=root
+jdbcUrl=jdbc\:mysql\://localhost\:3306/j_ee_students_system?zeroDateTimeBehavior\=convertToNull
+</Resource>
+  <Resource id="MySQL_j_ee_students_system_utf8" type="javax.sql.DataSource">#Wed Jun 15 22:45:06 EEST 2016
+jdbcDriver=com.mysql.jdbc.Driver
+password=159357
+userName=root
+jdbcUrl=jdbc\:mysql\://localhost\:3306/j_ee_students_system?useUnicode\=yes&amp;characterEncoding\=UTF-8&amp;zeroDateTimeBehavior\=convertToNull
+</Resource>
+</resources>

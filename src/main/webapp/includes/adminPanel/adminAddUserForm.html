@@ -1,0 +1,138 @@
+<section class="col-lg-6">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title" style="text-align: center;">Създаване на потребител</h3></div>
+        <div class="panel-body">
+            <form name="V_F_adminAddUserForm" method="POST" action="" id="V_F_adminAddUserForm">    
+
+                <div class="alert alert-danger" id="V_F_ERRORS_BOX_adminAddUserForm" style="display: none;">
+                    <span class="glyphicon glyphicon-warning-sign" style="font-size: 18px;"></span> Моля поправете следните грешки:<br/>
+
+                </div>
+                <div style="">       
+
+                    <fieldset>                                        
+                        <legend>Информация за идентифициране на потребителя</legend>
+                        <div class="form-group"> 
+                            <label for="username">Потребителско име:</label>
+                            <input type="text" name="username" id="username" class="form-control" required="required" />
+                        </div>    
+                        <div class="form-group"> 
+                            <label for="password">Парола:</label>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Избраната парола трябва да е с дължина между 5 и 255 символа." required="required"/>
+                        </div>
+
+                        <div class="form-group"> 
+                            <label for="passwordRepeat">Повторно въвеждане на паролата:</label>
+                            <input type="password" name="passwordRepeat" id="passwordRepeat" class="form-control" placeholder="Избраната парола трябва да е с дължина между 5 и 255 символа." required="required" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="usersRoles">Потребителски роли в системата:</label><br/>
+                            <select name="usersRoles[]" id="usersRoles" multiple="multiple"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="isActivated">Достъп на потребителя до системата:</label><br/>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="isActivated" value="1" id="option1" checked> Разреши достъп
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="isActivated" value="0" id="option2"> Блокирай достъп
+                                </label>
+
+                            </div>
+                        </div>
+
+
+                    </fieldset>
+                    <fieldset>
+                        <legend>Лична информация</legend>
+                        <div class="form-group"> 
+                            <label for="email">Електронна поща:</label>
+                            <input type="email" name="email" id="email" class="form-control" placeholder="Вашето потребителско име" required="required"/>
+                        </div>
+                        <div class="form-group"> 
+                            <label for="firstName">Име:</label>
+                            <input type="text" name="firstName" id="firstName" class="form-control"  required="required" />
+                        </div>
+                        <div class="form-group"> 
+                            <label for="surname">Презиме:</label>
+                            <input type="text" name="surname" id="surname" class="form-control"  required="required" />
+                        </div>
+                        <div class="form-group"> 
+                            <label for="lastName">Фамилия:</label>
+                            <input type="text" name="lastName" id="lastName" class="form-control"  required="required" />
+                        </div>     
+                    </fieldset>
+
+                </div>
+
+                <button class="btn btn-primary"  style="display: block; width: 150px; margin: 0 auto;">Запис</button>
+
+                <div style="margin: 10px; text-align: center;">
+
+                </div>
+
+            </form>
+        </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $.ajax({
+            url: 'services/admin/users/get_users_roles',
+            type: 'GET',
+            contentType: "application/json;charset=UTF-8",
+            success: function (data) {
+                for (var i = 0; i !== data.length; ++i) {
+                    $("#usersRoles").append('<option value="' + data[i].roleName + '">' + data[i].roleTitle + '</option>')
+                }
+                $('#usersRoles').multiselect({
+                    nonSelectedText: 'Избор на роли в системата'
+                });
+                $("#V_F_adminAddUserForm").submit(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: 'services/admin/users/create_user',
+                        type: 'POST',
+                        data: $("#V_F_adminAddUserForm").serializeArray(),
+                        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                        statusCode: {
+                            200: function (data) {
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").attr("class", "alert alert-success");
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").html(succesUIComponentIcon + 'Потребителят е успешно създаден!');
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").show("slow");
+                                $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                            },
+                            400: function (data) {
+                                systemUser = null;
+                                var responseJSON = data.responseJSON;
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").attr("class", "alert alert-danger");
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").html(buildListFromErrors(responseJSON.validationErrors));
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").show("slow");
+                                $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                            },
+                            401: function () {
+                                isUserAuthenticatedViews(mainSectionTemplate, callbackName);
+                            },
+                            403: function () {
+                                notAuthorizedAction();
+                            },
+                            500: function () {
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").attr("class", "alert alert-danger");
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").html("Грешка на сървъра. Свържете се с екипа по поддръжка.");
+                                $("#V_F_ERRORS_BOX_adminAddUserForm").show("slow");
+                                $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>
+

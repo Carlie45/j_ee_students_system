@@ -1,0 +1,50 @@
+<div id="assignmentDetailsAndSolution" class="lead" style="text-align: justify; text-indent: 0; display: none;"> 
+    <ul class="list-group">      
+        <li class="list-group-item">
+            Условие (прикачен файл):
+            <span id="attachedFile"></span>
+        </li>
+        <li class="list-group-item">
+            Указания за изпълнение:
+            <p class="well well-sm" id="assignmentDescription"></p>
+        </li>
+
+        <li class="list-group-item">
+            Срок за предаване:
+            <span id="endTime" class="label label-primary"></span>
+        </li>
+
+        <li class="list-group-item">            
+            <label>Вашето решение на "<span id="assignmentTitle"></span>": <br/> 
+                <small>(Проверете внимателно, дали са изпълнени всички изисквания преди да предадете решението.)</small></label><br/>
+            <div style="text-align: center;">
+                <label id="fileUploadButton" class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Изберете файл</span>      
+                    <input id="fileupload" type="file" name="file" data-url="" style="display: none;"/>
+                </label>
+                <input id="uploadedFile" name="uploadedFile" type="hidden" value=""/>
+                <br/><br/>
+                <div id="fileuploadStatus" class="alert alert-success" role="alert" style="display: none;">  </div>
+                <div class="progress" id="progress">
+                    <div class="progress-bar bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                </div> 
+            </div>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#startTime").datepicker();
+        $("#endTime").datepicker();
+        $("#startTime").datepicker("option", "dateFormat", "dd.mm.yy");
+        $("#endTime").datepicker("option", "dateFormat", "dd.mm.yy");
+     
+
+        $("#fileUploadButton").click(function () {
+            $("#fileupload").click();
+        });
+
+
+    });
+</script>

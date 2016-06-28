@@ -1,0 +1,75 @@
+<section class="col-lg-6" style="padding: 0;">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title" style="text-align: center;">Потребители в система</h3></div>
+        <div class="panel-body">
+            <div class="container-fluid">
+                <div style="text-align: center;">          
+                  
+
+                    <div class="btn-group">
+                        <div class="dropdown">
+                            <button type="button" id="dropdown_menu" class="AUTH-create__users auth btn btn-primary dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-user"></span> Добави нов потребител
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdown_menu">
+                                <li><a class="hashLink" href="#loadAdminAddUserForm">Обикновен</a></li>
+                                <li><a class="hashLink" href="#loadAdminAddStudentForm">Студент</a></li>
+                                <li><a class="hashLink" href="#loadAdminAddLecturerForm">Преподавател</a></li>                           
+                            </ul>
+                        </div>
+                    </div>
+                    
+                     <div class="btn-group">
+                        <button id="loadAddDegreeForm" type="button" class="AUTH-create__users auth btn btn-primary button_select_item">
+                            <span class="glyphicon glyphicon-briefcase"></span> Добави академична степен (титла)
+                        </button>   
+                    </div>
+
+                </div>      
+            </div>
+            <br/>
+            <div class="container-fluid">
+                <div class="row">
+                    <table id="V_TABLE_users" class="table" style="max-width: 600px;">
+                        <tr>
+                            <th>Потр.име</th>
+                            <th>Три имена</th>
+                            <th>Електронна поща</th>
+                            <th>Достъп позволен?</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    $(document).ready(function () {
+        updateAuthorizedAccessTemplate();
+        $.ajax({
+            url: 'services/users/get_users',
+            type: 'GET',
+            contentType: "application/json;charset=UTF-8",
+            success: function (data) {
+                var table = '';
+                for (var i = 0; i != data.length; ++i) {
+                    table += '<tr>';
+                    table += '<td>' +data[i].username + '</td>';
+                    table += '<td>' +data[i].firstName + ' ' + data[i].surname + ' ' + data[i].lastName + '</td>';
+                    table += '<td>' +data[i].email + '</td>';
+                    table += '<td>' + ((data[i].isActivated)? 'да' : 'не') + '</td>';
+                    table += '</tr>';
+                }
+                $("#V_TABLE_users").append(table);
+            }
+        });
+        
+        $("#loadAddDegreeForm").click(function(event){
+           event.preventDefault();
+           loadAdminAddDegreeForm();
+        });
+    });
+</script>

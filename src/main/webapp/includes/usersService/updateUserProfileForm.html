@@ -1,0 +1,66 @@
+<section class="col-lg-9 index_margin">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title" style="text-align: center;">Обновяване на потребителски профил</h3></div>
+        <div class="panel-body">
+            <form name="V_F_updateUserProfileForm" method="POST" action="" id="V_F_updateUserProfileForm">    
+                <h2>Информация за потребителя:</h2>
+                <div class="alert alert-danger" id="V_F_ERRORS_BOX_updateUserProfileForm" style="display: none;">
+                    <span class="glyphicon glyphicon-warning-sign" style="font-size: 18px;"></span> Моля поправете следните грешки:<br/>
+                  
+                </div>
+                <div style="padding: 0 0 0 50px;">                 
+                    <fieldset>
+                        <legend>Лична информация</legend>
+                        <div class="form-group"> 
+                            <label for="firstName">Име:</label>
+                            <input type="text" name="firstName" id="firstName" class="form-control"  required="required" disabled="disabled"/>
+                        </div>
+                        <div class="form-group"> 
+                            <label for="surname">Презиме:</label>
+                            <input type="text" name="surname" id="surname" class="form-control"  required="required" disabled="disabled"/>
+                        </div>
+                        <div class="form-group"> 
+                            <label for="lastName">Фамилия:</label>
+                            <input type="text" name="lastName" id="lastName" class="form-control"  required="required" disabled="disabled"/>
+                        </div>              
+
+                        <div class="form-group"> 
+                            <label for="username">Потребителско име:</label>
+                            <input type="text" name="username" id="username" class="form-control" required="required" disabled="disabled"/>
+                        </div>
+                        <div class="form-group"> 
+                            <label for="email">Електронна поща:</label>
+                            <input type="email" name="email" id="email" class="form-control" placeholder="" required="required"/>
+                        </div>
+
+
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Промяна на паролата</legend>
+                        <div class="form-group"> 
+                            <label for="password">Нова парола:</label>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Освавете празно, ако не желаете промяна на паролата."/>
+                        </div>
+
+                        <div class="form-group"> 
+                            <label for="passwordRepeat">Повтори новата парола:</label>
+                            <input type="password" name="passwordRepeat" id="passwordRepeat" class="form-control" placeholder="Освавете празно, ако не желаете промяна на паролата." />
+                        </div>
+                    </fieldset>
+                </div>
+                <h3>Моля въведете Вашата текуща парола, за да запишете промените.</h3>
+
+                <div class="form-group" style="text-align: center;"> 
+                    <label for="oldPassword">Текуща парола:</label>
+                    <input type="password" name="oldPassword" id="oldPassword" class="form-control" placeholder="Въведте парола, за да извършите каквато и да е промяна по профила." required="required" style="width: 50%; margin: 0 auto;"/>
+                </div>
+                <button class="btn btn-primary"  style="display: block; width: 150px; margin: 0 auto;">Запис</button>
+
+                <div style="margin: 10px; text-align: center;">
+
+                </div>
+
+            </form>
+        </div>
+</section>

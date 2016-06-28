@@ -1,0 +1,74 @@
+<section class="col-lg-6">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title" style="text-align: center;">Създаване на академична степен (титла)</h3></div>
+        <div class="panel-body">
+            <form name="V_F_adminAddDegreeForm" method="POST" action="" id="V_F_adminAddDegreeForm">    
+
+                <div class="alert alert-danger" id="V_F_ERRORS_BOX_adminAddDegreeForm" style="display: none;">
+                    <span class="glyphicon glyphicon-warning-sign" style="font-size: 18px;"></span> Моля поправете следните грешки:<br/>
+
+                </div>
+                <div style="">       
+
+                    <fieldset>                                        
+                        <legend>Информация за създаване на академична степен (титла)</legend>
+                        <div class="form-group"> 
+                            <label for="degreeName">Наименование на академична степен (титла):</label>
+                            <input type="text" name="degreeName" id="degreeName" class="form-control" required="required" />
+                        </div>    
+             
+                    </fieldset>
+                 </div>
+
+                <button class="btn btn-primary"  style="display: block; width: 150px; margin: 0 auto;">Запис</button>
+
+                <div style="margin: 10px; text-align: center;">
+
+                </div>
+
+            </form>
+        </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+       $("#V_F_adminAddDegreeForm").submit(function (event) {
+                            event.preventDefault();
+                            $.ajax({
+                                url: 'services/admin/users/create_degree',
+                                type: 'POST',
+                                data: $("#V_F_adminAddDegreeForm").serializeArray(),
+                                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                                statusCode: {
+                                    200: function (data) {
+                                        $("#V_F_adminAddDegreeForm")[0].reset();
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").attr("class", "alert alert-success");
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").html(succesUIComponentIcon + 'Специалността е успешно създадена!');
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    },
+                                    400: function (data) {
+                                        systemUser = null;
+                                        var responseJSON = data.responseJSON;
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").attr("class", "alert alert-danger");
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").html(buildListFromErrors(responseJSON.validationErrors));
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    },
+                                    401: function () {
+                                        isUserAuthenticatedViews(mainSectionTemplate, callbackName);
+                                    },
+                                    500: function () {
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").attr("class", "alert alert-danger");
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").html("Грешка на сървъра. Свържете се с екипа по поддръжка.");
+                                        $("#V_F_ERRORS_BOX_adminAddDegreeForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    }
+                                }
+                            });
+                        });
+
+
+    });
+</script>
+
