@@ -1,6 +1,7 @@
 var inAdminPanel = false;
 var selectedSpecialityValue = null;
 var selectedDisciplineValue = null;
+var selectedAssignmentValue = null;
 
 function DirectoryLocation() {
     this.includes = "includes/";
@@ -27,7 +28,7 @@ function TemplateFiles() {
     this.adminDisciplinesPage = directoryLocation.adminPanel + "adminDisciplinesPage.html";
     this.adminAddDisciplineForm = directoryLocation.adminPanel + "adminAddDisciplineForm.html";
     this.adminUpdateDisciplineForm = directoryLocation.adminPanel + "adminUpdateDisciplineForm.html";
-    
+    this.adminUpdateAssignmentForm = directoryLocation.adminPanel + "adminUpdateAssignmentForm.html";
     this.assignmentSubmitForm = directoryLocation.assignmentsService + "assignmentSubmitForm.html";
     this.assignmentsByDisciplinePage = directoryLocation.assignmentsService + "assignmentsByDisciplinePage.html";
 }

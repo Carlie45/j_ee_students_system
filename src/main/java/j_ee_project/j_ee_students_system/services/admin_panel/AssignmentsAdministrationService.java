@@ -100,4 +100,43 @@ public class AssignmentsAdministrationService {
 
     }
 
+    @POST
+    @Path("update_assignment")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateAssignment(
+            @FormParam("assignmentId") Long assignmentId,
+            @FormParam("title") String title,
+            @FormParam("description") String description,
+            @FormParam("startTime") String startTime,
+            @FormParam("endTime") String endTime,
+            @FormParam("discipline") Long disciplineId) throws Exception {
+        if (!systemSecurityManager.isAuthorized(userSessionData, "update__assignments")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        
+        title = StringEscapeUtils.escapeHtml4(title);
+        Assignment assignment = assignmentDataManager.find(assignmentId);
+        assignment.setTitle(title);
+        
+        description = StringEscapeUtils.escapeHtml4(description);
+        assignment.setDescription(description);
+        
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        startTime = StringEscapeUtils.escapeHtml4(startTime);
+        Date assignmentStartTime = dateFormat.parse(startTime);
+        assignment.setStartTime(assignmentStartTime);
+        
+        endTime = StringEscapeUtils.escapeHtml4(endTime);
+        Date assignmentEndTime = dateFormat.parse(endTime);
+        assignment.setEndTime(assignmentEndTime);
+        
+        Discipline discipline = disciplineDataManager.find(disciplineId);
+        assignment.setDiscipline(discipline);
+        
+        assignmentDataManager.edit(assignment);
+        
+        return Response.ok().build();
+    }
+    
 }

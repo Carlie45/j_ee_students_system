@@ -10,6 +10,8 @@ import j_ee_project.j_ee_students_system.entities.Discipline;
 import j_ee_project.j_ee_students_system.security.SystemSecurityManager;
 import j_ee_project.j_ee_students_system.security.UserSessionData;
 import j_ee_project.j_ee_students_system.services.resources.AssignmentResource;
+import j_ee_project.j_ee_students_system.services.resources.DisciplineResource;
+import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -77,8 +79,31 @@ public class AssignmentsService {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Assignment assignment = assignmentDataManager.find(assignmentId);
+        Discipline discipline = assignment.getDiscipline();
+        DisciplineResource disciplineResource = new DisciplineResource(discipline);
 
-        return Response.ok().entity(new AssignmentResource(assignment)).build();
+        return Response.ok().entity(new AssignmentResource(assignment, disciplineResource)).build();
+    }
+    
+    @GET
+    @Path("get_assignments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssignments() {
+        if (!systemSecurityManager.isAuthorized(userSessionData, "read__assignments")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        List<Assignment> assignments = assignmentDataManager.findAll();
+        AssignmentResource[] assignmentsResources = new AssignmentResource[assignments.size()];
+        int i = 0;
+        for (Assignment assignment : assignments) {
+            Discipline discipline = assignment.getDiscipline();
+            DisciplineResource disciplineResource = new DisciplineResource(discipline);
+            
+            assignmentsResources[i++] = new AssignmentResource(assignment, disciplineResource);
+        }
+
+        return Response.ok().entity(assignmentsResources).build();
     }
 
 }

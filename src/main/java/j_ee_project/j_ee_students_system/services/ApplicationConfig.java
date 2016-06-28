@@ -50,7 +50,6 @@ public class ApplicationConfig extends Application {
         resources.add(j_ee_project.j_ee_students_system.services.base.DisciplinesService.class);
         resources.add(j_ee_project.j_ee_students_system.services.base.SpecialitiesService.class);
         resources.add(j_ee_project.j_ee_students_system.services.base.UsersService.class);
-        resources.add(org.glassfish.jersey.server.wadl.internal.WadlResource.class);
     }
 
 }

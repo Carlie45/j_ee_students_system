@@ -11,7 +11,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdown_menu">                         
-                                <li class="AUTH-update__assignments auth"><a href="#" class="under_construction">Редактирай</a></li>
+                                <li class="AUTH-update__assignments auth"><a href="#loadAdminUpdateAssignmentsForm" class="hashLink btn-primary">Редактирай</a></li>
                                 <li class="AUTH-delete__assignments auth"><a href="#" class="under_construction">Изтрий</a></li>
                                
                             </ul>
@@ -32,10 +32,13 @@
                 <div class="row">
                     <table id="V_TABLE_users" class="table" style="max-width: 600px;">
                         <tr>
-                            <th>Потр.име</th>
-                            <th>Три имена</th>
-                            <th>Електронна поща</th>
-                            <th>Достъп позволен?</th>
+                            <th></th>
+                            <th>Заглавие</th>
+                            <th>Описание</th>
+                            <th>Дисциплина</th>
+                            <th>Дата на създаване</th>
+                            <th>Срок от</th>
+                            <th>Срок до</th>
                         </tr>
                     </table>
                 </div>
@@ -49,17 +52,20 @@
     $(document).ready(function () {
          updateAuthorizedAccessTemplate();
         $.ajax({
-            url: 'services/users/get_users',
+            url: 'services/assignments/get_assignments',
             type: 'GET',
             contentType: "application/json;charset=UTF-8",
             success: function (data) {
                 var table = '';
                 for (var i = 0; i != data.length; ++i) {
-                    table += '<tr>';
-                    table += '<td>' +data[i].username + '</td>';
-                    table += '<td>' +data[i].firstName + ' ' + data[i].surname + ' ' + data[i].lastName + '</td>';
-                    table += '<td>' +data[i].email + '</td>';
-                    table += '<td>' + ((data[i].isActivated)? 'да' : 'не') + '</td>';
+                    table += '<tr id=assignment' + data[i].id + '>';
+                    table += '<td><input type="checkbox" name="selectedAssignment" value="' + data[i].id + '"/></td>';
+                    table += '<td>' + data[i].title + '</td>';
+                    table += '<td>' + data[i].description + '</td>';
+                    table += '<td>' + data[i].disciplineResource.disciplineName + '</td>';
+                    table += '<td>' + data[i].creationTime + '</td>';
+                    table += '<td>' + data[i].startTime + '</td>';
+                    table += '<td>' + data[i].endTime + '</td>';
                     table += '</tr>';
                 }
                 $("#V_TABLE_users").append(table);

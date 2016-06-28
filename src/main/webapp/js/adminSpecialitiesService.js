@@ -19,3 +19,15 @@ function loadAdminUpdateSpecialityForm(){
     selectedSpecialityValue = selectedValues[0];    
     isUserAuthenticatedViews(templateFiles.adminUpdateSpecialityForm);
 }
+
+function loadAdminDeleteSelectedSpeciality() {
+    selectedSpecialityValue = $('[name=selectedSpeciality]:checked').val();
+    $.ajax({
+       url: 'services/specialities/delete_speciality/' + selectedSpecialityValue,
+       type: 'POST',
+       success: function() {
+           var specialityId = "#speciality" + selectedSpecialityValue;
+           $(specialityId).hide();
+       }
+    });
+}

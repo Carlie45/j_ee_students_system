@@ -17,6 +17,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -73,7 +75,16 @@ public class SpecialitiesService {
         return Response.status(Response.Status.FORBIDDEN).build();
     }
     
-     @GET
+    @POST
+    @Path("delete_speciality/{specialityId}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteSpeciality(@PathParam("specialityId") Long specialityId) {
+        Speciality speciality = specialityDataManager.find(specialityId); 
+        specialityDataManager.remove(speciality);
+    }
+    
+    @GET
     @Path("get_specialities_and_disciplines_in_them")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSpecialitiesAndDisciplinesInThem() {

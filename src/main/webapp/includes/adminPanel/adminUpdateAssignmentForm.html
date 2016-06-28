@@ -1,0 +1,164 @@
+<section class="col-lg-6">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title" style="text-align: center;">Редактиране на домашно</h3></div>
+        <div class="panel-body">
+            <form name="V_F_adminUpdateAssignmentForm" method="POST" action="" id="V_F_adminUpdateAssignmentForm">    
+
+                <div class="alert alert-danger" id="V_F_ERRORS_BOX_adminUpdateAssignmentForm" style="display: none;">
+                    <span class="glyphicon glyphicon-warning-sign" style="font-size: 18px;"></span> Моля поправете следните грешки:<br/>
+
+                </div>
+                <div style="">       
+
+                    <fieldset>                                        
+                        <legend>Информация за домашното</legend>
+                        <div class="form-group"> 
+                            <label for="title">Заглавие на домашното:</label>
+                            <input type="text" name="title" id="title" class="form-control" required="required" />
+                        </div>    
+                        <div class="form-group">
+                            <label for="discipline">Дисциплина:</label> <br/>
+                            <select name="discipline" id="discipline" class="form-control"></select>
+                        </div>
+                        <div class="form-group" style="text-align: center;"> 
+                            
+                            <label>Условие:</label><br/>
+                            <label id="fileUploadButton" class="btn btn-success fileinput-button">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                <span>Изберете файл</span>      
+                                <input id="fileupload" type="file" name="file" data-url="services/file_upload/assignmentAttachement" style="display: none;"/>
+                            </label>
+                            <input id="uploadedFile" name="uploadedFile" type="hidden" value=""/>
+                            <br/><br/>
+                             <div id="fileuploadStatus" class="alert alert-success" role="alert" style="display: none;">  </div>
+                            <div class="progress" id="progress">
+                                <div class="progress-bar bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                            </div>                            
+                           
+                        </div>
+
+                        <div class="form-group"> 
+                            <label for="description">Описание:</label>
+                            <textarea name="description" id="description" class="form-control" required="required"></textarea>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="startTime">Срок за предаване:</label> <br/>
+                            <div style="text-align: center; width:200px;">
+                                от
+                                <input type="text" name="startTime" id="startTime" class="form-control" style="width: 150px; margin: 0 auto;" /> до
+                                <input type="text" name="endTime" id="endTime" class="form-control" style="width: 150px; margin: 0 auto;" /> 
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </div>
+
+                <button class="btn btn-primary"  style="display: block; width: 150px; margin: 0 auto;">Запис</button>
+                <input id="assignmentId" name="assignmentId" type="hidden"/>
+
+                <div style="margin: 10px; text-align: center;">
+
+                </div>
+
+            </form>
+        </div>
+</section>
+<script type="text/javascript">
+    $(document).ready(function (data) {
+        $("#startTime").datepicker();
+        $("#endTime").datepicker();
+        $("#startTime").datepicker("option", "dateFormat", "dd.mm.yy");
+        $("#endTime").datepicker("option", "dateFormat", "dd.mm.yy");
+
+        $.ajax({
+            url: 'services/assignments/get_assignment/' +  selectedAssignmentValue,
+            type: 'GET',
+            contentType: "application/json;charset=UTF-8",
+            success: function (data) {   
+                $('#title').val(data.title);
+                $('#description').val(data.description); 
+                $('#startTime').val(data.startTime);
+                $('#endTime').val(data.endTime);
+                $('#assignmentId').val(selectedAssignmentValue);
+                var disciplineId = data.disciplineResource.id;
+                
+                $.ajax({
+                    url: 'services/disciplines/get_disciplines',
+                    type: 'GET',
+                    contentType: "application/json;charset=UTF-8",
+                    success: function (data) {
+                        for (var i = 0; i !== data.length; ++i) {
+                            var selectedDiscipline = (data[i].id === disciplineId) ? 'selected="selected"' : '';
+                            $("#discipline").append('<option ' + selectedDiscipline + 'value="' + data[i].id + '">' + data[i].disciplineName + '</option>')
+                        }
+                       $('#discipline').select({
+                            nonSelectedText: 'Избор на дисциплина'
+                        });
+                    }
+                });
+                
+               
+               
+                $("#V_F_adminUpdateAssignmentForm").submit(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: 'services/admin/assignments/update_assignment',
+                        type: 'POST',
+                        data: $("#V_F_adminUpdateAssignmentForm").serializeArray(),
+                        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                        statusCode: {
+                                    200: function (data) {                                        
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").attr("class", "alert alert-success");
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").html(succesUIComponentIcon + 'Домашното е успешно обновено!');
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    },
+                                    400: function (data) {
+                                        systemUser = null;
+                                        var responseJSON = data.responseJSON;
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").attr("class", "alert alert-danger");
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").html(buildListFromErrors(responseJSON.validationErrors));
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    },
+                                    401: function () {
+                                        isUserAuthenticatedViews(mainSectionTemplate, callbackName);
+                                    },
+                                    500: function () {
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").attr("class", "alert alert-danger");
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").html("Грешка на сървъра. Свържете се с екипа по поддръжка.");
+                                        $("#V_F_ERRORS_BOX_adminUpdateAssignmentForm").show("slow");
+                                        $("html, body").stop().animate({scrollTop: 0}, '1000', 'swing');
+                                    }
+                                }
+                    });
+                });
+            }
+        });
+
+$("#fileUploadButton").click(function(){
+    $("#fileupload").click();
+});
+        $('#fileupload').fileupload({
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .bar').css(
+                        'width',
+                        progress + '%'
+                        );
+            },
+            done: function (e, data) {
+               var fileNname =  JSON.parse(data.response().result);
+                $("#uploadedFile").val(fileNname.fileName);
+                $("#fileupload").attr("disabled", "disabled");
+                $("#fileUploadButton").attr("disabled", "disabled");
+                $("#fileuploadStatus").html("Файлът " + fileNname.fileName + " е успешно съхранен!");
+                $("#fileuploadStatus").show("slow");
+            }
+        });
+
+    });
+</script>
+

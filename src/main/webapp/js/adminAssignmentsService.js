@@ -6,3 +6,8 @@ function loadAssignmentsView(){
 function loadAdminAddAssignmentForm(){
     isUserAuthenticatedViews(templateFiles.adminAddAssignmentForm);
 }
+
+function loadAdminUpdateAssignmentsForm(){
+    selectedAssignmentValue = $('[name=selectedAssignment]:checked').val();
+    isUserAuthenticatedViews(templateFiles.adminUpdateAssignmentForm);
+}

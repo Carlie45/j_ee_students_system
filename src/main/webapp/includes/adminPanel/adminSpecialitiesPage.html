@@ -17,7 +17,7 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdown_menu">                         
                                 <li class="AUTH-update__specialities auth"><a href="#loadAdminUpdateSpecialityForm" class="hashLink btn-link">Редактирай</a></li>
-                                <li class="AUTH-delete__specialities auth"><a href="#" class="under_construction">Изтрий</a></li>
+                                <li class="AUTH-delete__specialities auth"><a href="#loadAdminDeleteSelectedSpeciality" class="hashLink btn-link">Изтрий</a></li>
                             </ul>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
             success: function (data) {
                 var table = '';
                 for (var i = 0; i != data.length; ++i) {
-                    table += '<tr>';                  
+                    table += '<tr id=speciality' + data[i].id + '>';                  
                     table += '<td><label><input class="selectedSpecialities" type="checkbox" name="selectedSpeciality" value="' + data[i].id + '"/> '+data[i].specialityName + '</label></td>';
                     table += '</tr>';
                 }

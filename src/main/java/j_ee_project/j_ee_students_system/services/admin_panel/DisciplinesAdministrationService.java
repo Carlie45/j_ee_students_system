@@ -88,6 +88,8 @@ public class DisciplinesAdministrationService {
         Speciality speciality = specialityDataManager.find(specialityId);
         discipline.setSpeciality(speciality);  
         
+        disciplineDataManager.edit(discipline);
+        
         return Response.ok().build();
     }
 

@@ -1,10 +1,8 @@
 package j_ee_project.j_ee_students_system.services.resources;
 
 import j_ee_project.j_ee_students_system.entities.Assignment;
-import j_ee_project.j_ee_students_system.entities.Discipline;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,18 +16,19 @@ public class AssignmentResource {
     private String title;
     private String attachedFile;
     private String description;
+    private String creationTime;
     private String startTime;
     private String endTime;
-
-
-    public AssignmentResource(Long id, String title, String attachedFile, String description, String startTime, String endTime) {
+    private DisciplineResource disciplineResource;
+    
+    public AssignmentResource(Long id, String title, String attachedFile, String description, String creationTime, String startTime, String endTime) {
         this.id = id;
         this.title = title;
         this.attachedFile = attachedFile;
         this.description = description;
+        this.creationTime = creationTime;
         this.startTime = startTime;
         this.endTime = endTime;
-        
     }
 
     public AssignmentResource(Assignment assignment) {
@@ -37,12 +36,23 @@ public class AssignmentResource {
         this.title = assignment.getTitle();
         this.description = assignment.getDescription();
         this.attachedFile = assignment.getAttachedFile();
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");       
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        this.creationTime = dateFormat.format(assignment.getCreationTime());
         this.startTime = dateFormat.format(assignment.getStartTime());
         this.endTime = dateFormat.format(assignment.getEndTime());
     }
     
-    
+        public AssignmentResource(Assignment assignment, DisciplineResource disciplineResource) {
+        this.id = assignment.getId();
+        this.title = assignment.getTitle();
+        this.description = assignment.getDescription();
+        this.attachedFile = assignment.getAttachedFile();
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        this.creationTime = dateFormat.format(assignment.getCreationTime());
+        this.startTime = dateFormat.format(assignment.getStartTime());
+        this.endTime = dateFormat.format(assignment.getEndTime());
+        this.disciplineResource = disciplineResource;
+    }
 
     public Long getId() {
         return id;
@@ -93,6 +103,19 @@ public class AssignmentResource {
     }
 
   
+    public DisciplineResource getDisciplineResource() {
+        return disciplineResource;
+    }
     
+    public void setDisciplineResource(DisciplineResource disciplineResource) {
+        this.disciplineResource = disciplineResource;
+    }
     
+    public String getCreationTime() {
+        return creationTime;
+    }
+    
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 }

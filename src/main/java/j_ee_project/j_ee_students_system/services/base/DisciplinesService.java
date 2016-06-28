@@ -11,7 +11,6 @@ import j_ee_project.j_ee_students_system.services.resources.DisciplineResource;
 import j_ee_project.j_ee_students_system.services.resources.SpecialityResource;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
@@ -70,8 +69,8 @@ public class DisciplinesService {
         }
 
         return Response.ok().entity(disciplinesResources).build();
-
     }
+    
     @GET
     @Path("get_discipline_by_id/{disciplineId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -87,6 +86,15 @@ public class DisciplinesService {
         
         
         return Response.ok().entity(disciplineResource).build();
+    }
+    
+    @POST
+    @Path("delete_discipline/{disciplineId}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteDiscipline(@PathParam("disciplineId") Long disciplineId) {
+        Discipline discipline = disciplineDataManager.find(disciplineId); 
+        disciplineDataManager.remove(discipline);
     }
     
     @POST
